@@ -1,6 +1,7 @@
-import { InvalidInputError, InvalidOperationError } from "../errors.js";
+import { InvalidInputError, InvalidOperationError } from "../../errors.js";
 import { createReadStream }  from 'node:fs';
 import { resolve as resolvePath } from 'node:path';
+import { EOL } from 'node:os';
 
 const catArgRegex = /^cat\s(.+)$/;
 
@@ -20,7 +21,10 @@ export const cat = (command, activePath) => {
             const filePath = resolvePath(activePath, path);
             const reader = createReadStream(filePath);
 
-            reader.on('end', resolve);
+            reader.on('end', () => {
+                process.stdout.write(EOL);
+                resolve()
+            });
             reader.on('error', () => reject(new InvalidOperationError()));
         
             reader.pipe(process.stdout);

@@ -1,13 +1,7 @@
 import { EOL, cpus, homedir, userInfo, arch } from 'node:os'
-import { InvalidInputError } from '../errors.js';
+import { InvalidInputError } from '../../errors.js';
 
 const osFlagRegex = /^os\s(.+)$/;
-
-// os --EOL
-// os --cpus
-// os --homedir
-// os --username
-// os --architecture
 
 const osFlags = {
     '--EOL': EOL,

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { InvalidInputError, InvalidOperationError } from "../errors.js";
+import { InvalidInputError, InvalidOperationError } from "../../errors.js";
 import { readFile }  from 'node:fs/promises';
 import { resolve } from 'node:path';
 

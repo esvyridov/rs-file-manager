@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { InvalidOperationError } from '../errors.js';
+import { InvalidOperationError } from '../../errors.js';
 
 export const isUP = (command) => command === 'up';
 

@@ -1,6 +1,6 @@
 import { stat } from 'node:fs/promises'
 import { resolve } from 'node:path';
-import { InvalidInputError, InvalidOperationError } from '../errors.js';
+import { InvalidInputError, InvalidOperationError } from '../../errors.js';
 
 const cdWithArgRegex = /^cd\s(.+)$/;
 
@@ -16,15 +16,15 @@ export const cd = async (command, activeDir) => {
 
         const [, path] = pathMatch;
 
-        const newActiveDir = resolve(activeDir, path);
+        const nextActiveDir = resolve(activeDir, path);
     
-        const newActiveDirStat = await stat(newActiveDir);
+        const nextActiveDirStat = await stat(nextActiveDir);
 
-        if (!newActiveDirStat.isDirectory()) {
+        if (!nextActiveDirStat.isDirectory()) {
             throw new InvalidOperationError();
         }
     
-        return newActiveDir;
+        return nextActiveDir;
     } catch (err) {
         throw err;
     }

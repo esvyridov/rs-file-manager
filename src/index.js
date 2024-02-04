@@ -2,19 +2,19 @@ import { homedir } from 'node:os';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 
-import { isUP, up } from './commands/up.js';
-import { isCD, cd } from './commands/cd.js';
-import { isLS, ls } from './commands/ls.js';
-import { isCAT, cat } from './commands/cat.js';
-import { isAdd, add } from './commands/add.js';
-import { isRN, rn } from './commands/rn.js';
-import { isCP, cp } from './commands/cp.js';
-import { isMV, mv } from './commands/mv.js';
-import { isRM, rm } from './commands/rm.js';
-import { isOS, os } from './commands/os.js';
-import { isHash, hash } from './commands/hash.js';
-import { isCompress, compress } from './commands/compress.js';
-import { isDecompress, decompress } from './commands/decompress.js';
+import { isUP, up } from './commands/fs/up.js';
+import { isCD, cd } from './commands/fs/cd.js';
+import { isLS, ls } from './commands/fs/ls.js';
+import { isCAT, cat } from './commands/fs/cat.js';
+import { isAdd, add } from './commands/fs/add.js';
+import { isRN, rn } from './commands/fs/rn.js';
+import { isCP, cp } from './commands/fs/cp.js';
+import { isMV, mv } from './commands/fs/mv.js';
+import { isRM, rm } from './commands/fs/rm.js';
+import { isOS, os } from './commands/os/os.js';
+import { isHash, hash } from './commands/fs/hash.js';
+import { isCompress, compress } from './commands/fs/compress.js';
+import { isDecompress, decompress } from './commands/fs/decompress.js';
 import { InvalidInputError, InvalidOperationError } from './errors.js';
 
 const rl = createInterface({
@@ -25,7 +25,7 @@ const rl = createInterface({
 
 function getShowGoodbyeMessage(username) {
     return () => {
-        console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
+        console.log(`Thank you for using File Manager, ${username}, goodbye!`);
     }
 }
 
@@ -76,14 +76,14 @@ function main() {
                 throw new InvalidInputError();
             }
 
-            console.log(`\nYou are currently in ${activeDir}`);
+            console.log(`You are currently in ${activeDir}`);
         } catch (err) {
-            const operationError = new InvalidOperationError();
+            const fallbackError = new InvalidOperationError();
 
             if (err instanceof InvalidInputError || err instanceof InvalidOperationError) {
-                console.log(`\nError: ${err.message}`);
+                console.log(`Error: ${err.message}`);
             } else {
-                console.log(`\nError: ${operationError.message}`);
+                console.log(`Error: ${fallbackError.message}`);
             }
         }
 

@@ -1,4 +1,4 @@
-import { InvalidInputError, InvalidOperationError } from "../errors.js";
+import { InvalidInputError, InvalidOperationError } from "../../errors.js";
 import { rm as fsRM }  from 'node:fs/promises';
 import { resolve } from 'node:path';
 

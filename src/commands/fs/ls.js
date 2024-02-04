@@ -1,5 +1,5 @@
 import { readdir } from 'node:fs/promises';
-import { InvalidOperationError } from '../errors.js';
+import { InvalidOperationError } from '../../errors.js';
 
 export const isLS = (command) => command === 'ls';
 
