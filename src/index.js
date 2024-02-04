@@ -23,21 +23,25 @@ const rl = createInterface({
     prompt: 'Command: '
 })
 
-function getShowGoodbyeMessage(username) {
+function getPrintGoodbyeMessage(username) {
     return () => {
         console.log(`Thank you for using File Manager, ${username}, goodbye!`);
     }
 }
 
+function printActiveDir(activeDir) {
+    console.log(`You are currently in ${activeDir}`);
+}
+
 function main() {
     const username = process.argv.at(-1).split('=').at(-1);
     let activeDir = homedir();
-    const showGoodbyeMessage = getShowGoodbyeMessage(username)
+    const printGoodbyeMessage = getPrintGoodbyeMessage(username)
 
     console.log(`Welcome to the File Manager, ${username}!`);
-    console.log(`You are currently in ${activeDir}`);
+    printActiveDir(activeDir);
 
-    process.on('exit', showGoodbyeMessage);
+    process.on('exit', printGoodbyeMessage);
 
     rl.on('close', () => process.exit(0));
     rl.on('SIGINT', () => process.exit(0));
@@ -75,18 +79,17 @@ function main() {
             } else {
                 throw new InvalidInputError();
             }
-
-            console.log(`You are currently in ${activeDir}`);
         } catch (err) {
             const fallbackError = new InvalidOperationError();
 
             if (err instanceof InvalidInputError || err instanceof InvalidOperationError) {
-                console.log(`Error: ${err.message}`);
+                console.error(`Error: ${err.message}`);
             } else {
-                console.log(`Error: ${fallbackError.message}`);
+                console.error(`Error: ${fallbackError.message}`);
             }
         }
 
+        printActiveDir(activeDir);
         rl.prompt();
     });
 
