@@ -18,10 +18,11 @@ export const hash = async (command, activePath) => {
         const [, path] = pathMath;
     
         const filePath = resolve(activePath, path);
-        const hash = createHash('sha256');
 
         try {
             const data = await readFile(filePath);
+            const hash = createHash('sha256');
+            
             hash.update(data);
             console.log(hash.digest('hex'));
         } catch (err) {

@@ -21,15 +21,18 @@ export const cp = async (command, activeDir) => {
             const newFilePath = resolvePath(activeDir, newPath);
 
             const reader = createReadStream(oldFilePath);
-            const writer = createWriteStream(newFilePath, {
-                flags: 'wx',
-            });
 
-            writer.on('finish', resolve);
             reader.on('error', () => reject(new InvalidOperationError()));
-            writer.on('error', () => reject(new InvalidOperationError()));
-
-            reader.pipe(writer);
+            reader.on('ready', () => {
+                const writer = createWriteStream(newFilePath, {
+                    flags: 'wx',
+                });
+    
+                writer.on('error', () => reject(new InvalidOperationError()));
+                writer.on('finish', resolve);
+    
+                reader.pipe(writer);
+            });
         } catch (err) {
             reject(err);
         }

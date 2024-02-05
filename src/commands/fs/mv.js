@@ -22,24 +22,27 @@ export const mv = async (command, activeDir) => {
             const newFilePath = resolvePath(activeDir, newPath);
 
             const reader = createReadStream(oldFilePath);
-            const writer = createWriteStream(newFilePath, {
-                flags: 'wx',
-            });
 
-            writer.on('finish', async () => {
-                try {
-                    await rm(oldFilePath, {
-                        force: true,
-                    });
-                    resolve();
-                } catch (err) {
-                    reject(new InvalidOperationError());
-                }                
-            });
             reader.on('error', () => reject(new InvalidOperationError()));
-            writer.on('error', () => reject(new InvalidOperationError()));
-
-            reader.pipe(writer);
+            reader.on('ready', () => {
+                const writer = createWriteStream(newFilePath, {
+                    flags: 'wx',
+                });
+    
+                writer.on('finish', async () => {
+                    try {
+                        await rm(oldFilePath, {
+                            force: true,
+                        });
+                        resolve();
+                    } catch (err) {
+                        reject(new InvalidOperationError());
+                    }                
+                });
+                writer.on('error', () => reject(new InvalidOperationError()));
+    
+                reader.pipe(writer);
+            });
         } catch (err) {
             reject(err);
         }

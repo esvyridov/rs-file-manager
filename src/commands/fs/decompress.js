@@ -23,14 +23,17 @@ export const decompress = async (command, activeDir) => {
         const brotleDecompresser = createBrotliDecompress();
     
         const reader = createReadStream(archivePath);
-        const writer = createWriteStream(fileToDecompressPath, {
-            flags: 'wx',
-        });
 
         reader.on('error', () => reject(new InvalidOperationError()));
-        writer.on('error', () => reject(new InvalidOperationError()));
-        writer.on('finish', resolve);
+        reader.on('ready', () => {
+            const writer = createWriteStream(fileToDecompressPath, {
+                flags: 'wx',
+            });
     
-        reader.pipe(brotleDecompresser).pipe(writer);
+            writer.on('error', () => reject(new InvalidOperationError()));
+            writer.on('finish', resolve);
+        
+            reader.pipe(brotleDecompresser).pipe(writer);
+        });
     });
 }

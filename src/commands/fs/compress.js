@@ -1,4 +1,4 @@
-import { createReadStream, createWriteStream } from "node:fs";
+import { createReadStream, createWriteStream, read } from "node:fs";
 import { InvalidInputError, InvalidOperationError } from "../../errors.js";
 import { resolve as resolvePath } from 'node:path';
 import { createBrotliCompress } from "node:zlib";
@@ -22,15 +22,18 @@ export const compress = async (command, activeDir) => {
 
         const brotliCompresser = createBrotliCompress();
     
-        const reader = createReadStream(fileToCompressPath);
-        const writer = createWriteStream(archivePath, {
-            flags: 'wx',
-        });
+        const reader = createReadStream(fileToCompressPath)
 
         reader.on('error', () => reject(new InvalidOperationError()));
-        writer.on('error', () => reject(new InvalidOperationError()));
-        writer.on('finish', resolve);
+        reader.on('ready', () => {
+            const writer = createWriteStream(archivePath, {
+                flags: 'wx',
+            });
     
-        reader.pipe(brotliCompresser).pipe(writer);
+            writer.on('error', () => reject(new InvalidOperationError()));
+            writer.on('finish', resolve);
+
+            reader.pipe(brotliCompresser).pipe(writer);
+        });
     });
 }
