@@ -10,6 +10,7 @@ export const ls = async (activeDir) => {
         });
     
         const toPrint = files
+            .filter((file) => file.isDirectory() || file.isFile())
             .map((file) => [file.name, file.isDirectory() ? 'directory' : 'file'])
             .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
             .sort(([, typeA], [, typeB]) => typeA.localeCompare(typeB))

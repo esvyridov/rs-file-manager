@@ -1,4 +1,4 @@
-import { homedir } from 'node:os';
+import { EOL, homedir } from 'node:os';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 
@@ -44,7 +44,10 @@ function main() {
     process.on('exit', printGoodbyeMessage);
 
     rl.on('close', () => process.exit(0));
-    rl.on('SIGINT', () => process.exit(0));
+    rl.on('SIGINT', () => {
+        process.stdout.write(EOL);
+        process.exit(0)
+    });
 
     rl.on('line', async (command) => {
         try {
